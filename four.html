@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="ZH-CN">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Have been / Gone to</title>
 </head>
 <body>
+
+<div id="app"></div>
+
+<script src="engine.js"></script>
+<script src="data.js"></script>
+<script src="quiz-mini.js"></script>
+<script>
+    const quiz = Quiz.create(
+        document.getElementById('app'),
+        { type: 'c3', rounds: 10 }
+    );
+
+    quiz.start().then(function (r) {
+        console.log('答对', r.correct, '/', r.total);
+    });
+</script>
 
 </body>
 </html>

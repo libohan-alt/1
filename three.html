@@ -1,42 +1,27 @@
 <!DOCTYPE html>
-<html lang="ZH-CN">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            gap: 20px;
-            padding: 40px 20px;
-        }
-
-        .glasscard {
-            font-size: 72px;
-            font-family: "楷体", "STXingkai", cursive;
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 32px;
-            padding: 48px 56px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            color: whitesmoke;
-            text-align: center;
-            mix-blend-mode: difference;
-            min-width: 320px;
-            max-width: 800px;
-            width: 90%;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For &amp; Since</title>
 </head>
 <body>
+
+<div id="app"></div>
+
+<script src="engine.js"></script>
+<script src="data.js"></script>
+<script src="quiz-mini.js"></script>
+<script>
+    const quiz = Quiz.create(
+        document.getElementById('app'),
+        { type: 'c2', rounds: 10 }
+    );
+
+    quiz.start().then(function (r) {
+        console.log('答对', r.correct, '/', r.total);
+    });
+</script>
 
 </body>
 </html>
