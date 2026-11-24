@@ -163,6 +163,7 @@ var SPEC1 = [{
 var SPEC2 = [{
   axes: [{ name:'f', list:F2 }, { name:'x', list:D2.concat(T2) }],
   template:  function (r){ return r.f.replace('{x}', r.x); },
+  cn:        function (r){ return D2.indexOf(r.x) >= 0 ? '一段时间' : '时间起点'; },
   answer:    function (r){ return D2.indexOf(r.x) >= 0 ? 'for' : 'since'; },
   pool:      POOL2,
   mustHave:  function (r){ return [ D2.indexOf(r.x) >= 0 ? 'since' : 'for' ]; },
@@ -189,29 +190,34 @@ var SPEC3 = [
       {   /* Where is …? → gone */
         when: yes3,
         template: function (r){ return Engine.cap('Where is ' + r.p.n + '? — ' + r.p.P + ' ___ ' + r.pl + '.'); },
+        cn: function (){ return '人不在这里，去了还没回来'; },
         answer: gone3, pool: pool3, mustHave: function (r){ return [been3(r)]; },
         why: function (ans, r){ return why3('gone', r.p.aux); }, take: 2
       },
       {   /* … is not here. → gone */
         when: yes3,
         template: function (r){ return Engine.cap(r.p.n + ' is not here. ' + r.p.P + ' ___ ' + r.pl + '.'); },
+        cn: function (){ return '人现在不在这里'; },
         answer: gone3, pool: pool3, mustHave: function (r){ return [been3(r)]; },
         why: function (ans, r){ return why3('gone', r.p.aux); }, take: 2
       },
       {   /* … will be back … → gone（稀疏采样） */
         when: yes3, each: TM3, every: sparse3,
         template: function (r, tm){ return Engine.cap(r.p.n + ' ___ ' + r.pl + '. ' + r.p.P + ' will be back ' + tm + '.'); },
+        cn: function (){ return '稍后回来，说明现在还没回来'; },
         answer: gone3, pool: pool3, mustHave: function (r){ return [been3(r)]; },
         why: function (ans, r){ return why3('gone', r.p.aux); }, take: 2
       },
       {   /* … twice. → been（稀疏采样） */
         each: N3, every: sparse3,
         template: function (r, k){ return Engine.cap(r.p.n + ' ___ ' + r.pl + ' ' + k + '.'); },
+        cn: function (){ return '表示去过的经历或次数'; },
         answer: been3, pool: pool3, mustHave: function (r){ return [gone3(r)]; },
         why: function (ans, r){ return why3('been', r.p.aux); }, take: 2
       },
       {   /* … before. → been */
         template: function (r){ return Engine.cap(r.p.n + ' ___ ' + r.pl + ' before.'); },
+        cn: function (){ return '表示以前有过这样的经历'; },
         answer: been3, pool: pool3, mustHave: function (r){ return [gone3(r)]; },
         why: function (ans, r){ return why3('been', r.p.aux); }, take: 2
       }
@@ -222,6 +228,7 @@ var SPEC3 = [
     patterns: [
       {   /* Have you ever …? → been to */
         template: function (r){ return 'Have you ever ___ ' + r.pl + '?'; },
+        cn: function (){ return '你曾经去过……吗？'; },
         answer: 'been to', pool: POOL3_EVER, mustHave: ['gone to'],
         why: function (ans){ return why3('been', 'have'); }, take: 2
       }
