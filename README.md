@@ -23,20 +23,25 @@ py -m http.server 8000
 | `four.html` | Have been / Gone to | `c3` |
 | `five.html` | 综合练习，限时 60 秒 | `all` |
 
-专项练习默认每轮 10 题。答案解析在单题作答时不显示，会在本轮结束后统一呈现；综合练习超时后也会进入复盘，未答题目会标记为“未作答”。
+专项练习默认每轮 10 题。答题后会短暂显示用户答案与正确答案，不显示解析或“回答错误”提示；约半秒后自动平滑切换到下一题。答案解析在本轮结束后统一呈现；综合练习超时后也会进入复盘，未答题目会标记为“未作答”。
 
 ## JavaScript 文件关系
 
 - `engine.js`：通用题目生成、选项构造与洗牌算法，不负责页面显示。
 - `data.js`：三类题目的素材、出题规则、题解，并通过 `TOKENS` 暴露 `c1`、`c2`、`c3` 和 `all` 题库。
-- `quiz-mini.js`：从 `TOKENS` 读取题目，负责练习页面、答案反馈、计时及结束复盘。
+- `quiz-ui.js`：负责题目和复盘页面的 DOM 渲染，并切换练习/复盘状态。
+- `quiz-mini.js`：从 `TOKENS` 读取题目，负责答题流程、计时与结果统计。
+- `quiz.css`：独立视觉样式。练习页使用渐变背景；复盘页背景为固定纯色，题目和解析卡片保留毛玻璃效果，只有解析文字入场动画。
 - `app.js`：旧版完整界面的实现。目前这些 HTML 页面没有加载它；运行旧版界面前，需要提供它依赖的页面 DOM，并先加载 `engine.js`、`data.js`。
 
-练习页必须按此顺序加载题库相关脚本：
+练习题卡与选项沿用首页的黑白渐变、玻璃质感、大圆角和高对比视觉；对错反馈、计时和结束复盘保持简洁，题目文字仍以纯文本方式渲染。
+
+练习页先加载 `quiz.css`，脚本按此顺序加载：
 
 ```html
 <script src="engine.js"></script>
 <script src="data.js"></script>
+<script src="quiz-ui.js"></script>
 <script src="quiz-mini.js"></script>
 ```
 
@@ -68,5 +73,6 @@ quiz.start();
 ```powershell
 node --check .\engine.js
 node --check .\data.js
+node --check .\quiz-ui.js
 node --check .\quiz-mini.js
 ```
