@@ -1,58 +1,94 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英语学习工具</title>
-    <style>
-        body {
-            background: linear-gradient(135deg, #000000 0%, #ffffff 50%);;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            gap: 20px;
-            padding: 40px 20px;
-        }
-
-        .glasscard {
-            font-size: 72px;
-            font-family: "华文楷体", "STXingkai", cursive;
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 32px;
-            padding: 48px 56px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            color: whitesmoke;
-            text-align: center;
-            mix-blend-mode: difference;
-            min-width: 320px;
-            max-width: 800px;
-            width: 90%;
-            display: inline-block;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#090d12">
+  <meta name="description" content="英语王的村庄冒险：用知识与勇气驱散语法迷雾。">
+  <title>英语王：雾村</title>
+  <link rel="stylesheet" href="game.css">
 </head>
 <body>
-<h1 style="text-align: center;">英语学习工具</h1>
-<div class="glasscard">
-    <a href="two.html" class="glasscard">Already / Just / Yet</a>
-</div>
-<div class="glasscard">
-    <a href="three.html" class="glasscard">For &amp; Since</a>
-</div>
-<div class="glasscard">
-    <a href="four.html" class="glasscard">Have been / gone to</a>
-</div>
-<div class="glasscard">
-    <a href="five.html" class="glasscard">综合练习</a>
-</div>
+  <main class="game-shell">
+    <header class="masthead">
+      <a class="wordmark" href="index.html" aria-label="英语王：雾村首页">雾村档案<span>THE FOGBOUND VILLAGE</span></a>
+      <div class="masthead-actions">
+        <button id="help-toggle" class="quiet-button" type="button" aria-keyshortcuts="F1">游戏说明 <kbd>F1</kbd></button>
+        <button id="reset-game" class="quiet-button" type="button">重新开始</button>
+      </div>
+    </header>
+
+    <section class="intro-panel" id="intro-panel" aria-labelledby="intro-title">
+      <p class="eyebrow">一则关于语言、勇气与归来的故事</p>
+      <h1 id="intro-title">英语王：<span>雾村</span></h1>
+      <p class="intro-copy">寒雾吞没了道路。村民们被三道语法难关困住，而传说中的英语王，终于来到了村口。</p>
+      <form id="name-form" class="name-form">
+        <label for="surname">请留下你的姓氏，供故事末尾刻上石碑</label>
+        <div class="name-row">
+          <input id="surname" name="surname" type="text" maxlength="16" autocomplete="family-name" required>
+          <button class="primary-button" type="submit">进入雾村 <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </section>
+
+    <section class="adventure" id="adventure" hidden aria-label="冒险游戏">
+      <div class="game-frame">
+        <canvas id="world" width="880" height="600" tabindex="0" aria-label="俯视角冒险地图">
+          你的浏览器不支持 Canvas，请使用下方的练习入口。
+        </canvas>
+      </div>
+
+      <details class="quick-menu status-menu">
+        <summary aria-label="查看章节与冒险状态">雾村状态</summary>
+        <div class="quick-menu-panel">
+          <div class="game-heading">
+            <div>
+              <p class="eyebrow" id="chapter-label">序章 · 雾村</p>
+              <h1 id="chapter-title">村口的低语</h1>
+            </div>
+            <p class="save-note" id="save-note">进度保存在此浏览器</p>
+          </div>
+          <div class="hud" aria-label="冒险状态">
+            <div class="hud-item"><span class="hud-label">姓氏</span><strong id="hud-name">—</strong></div>
+            <div class="hud-item"><span class="hud-label">知识点</span><strong id="knowledge-count">0</strong></div>
+            <div class="hud-item"><span class="hud-label">已击败</span><strong id="boss-progress">0 / 3</strong></div>
+            <div class="hud-item enemy-status" id="enemy-status" hidden></div>
+          </div>
+          <p class="event-log" id="event-log" aria-live="polite">走近村民并按 E 交谈。</p>
+        </div>
+      </details>
+
+      <nav class="touch-controls" aria-label="触屏操作">
+        <div class="dpad">
+          <button type="button" data-move="up" aria-label="向上移动">↑</button>
+          <button type="button" data-move="left" aria-label="向左移动">←</button>
+          <button type="button" data-move="down" aria-label="向下移动">↓</button>
+          <button type="button" data-move="right" aria-label="向右移动">→</button>
+        </div>
+        <div class="action-pad">
+          <button type="button" id="answer-action">答题 <kbd>Q</kbd></button>
+          <button type="button" id="attack-action">挥剑 <kbd>Space</kbd></button>
+          <button type="button" id="interact-action">交谈 <kbd>E</kbd></button>
+          <button type="button" id="leave-battle-action" hidden>离开战场</button>
+        </div>
+      </nav>
+
+      <details class="quick-menu practice-links">
+        <summary>练习</summary>
+        <div class="practice-grid">
+          <a href="two.html">Already / Just / Yet</a>
+          <a href="three.html">For / Since</a>
+          <a href="four.html">Have been / Gone to</a>
+          <a id="comprehensive-practice-link" href="five.html" aria-disabled="true" tabindex="-1">综合练习（击败三位知识之主解锁）</a>
+        </div>
+      </details>
+      <p class="controls-hint">方向键 / WASD 移动 · <kbd>E</kbd> 与村民交谈 · <kbd>Q</kbd> 原地答题 · <kbd>Space</kbd> 挥剑（消耗 1 点）· <kbd>F1</kbd> / <kbd>?</kbd> 游戏说明</p>
+    </section>
+
+    <noscript><p class="noscript-note">请启用 JavaScript 才能开始冒险。</p></noscript>
+  </main>
+  <script src="engine.js"></script>
+  <script src="data.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>

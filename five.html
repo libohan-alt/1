@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>综合练习</title>
     <link rel="stylesheet" href="quiz.css">
 </head>
@@ -14,14 +14,32 @@
 <script src="quiz-ui.js"></script>
 <script src="quiz-mini.js"></script>
 <script>
-    const quiz = Quiz.create(
-        document.getElementById('app'),
-        { type: 'all', rounds: 10, timeLimit: 60 }
-    );
+    const saveKey = 'fogbound-english-king-v1';
+    const host = document.getElementById('app');
+    let progress;
+    let storageReadable = true;
+    try {
+        progress = JSON.parse(localStorage.getItem(saveKey) || 'null');
+    } catch (error) {
+        console.error('无法读取雾村通关进度：', error);
+        storageReadable = false;
+    }
 
-    quiz.start().then(function (r) {
-        console.log('答对', r.correct, '/', r.total);
-    });
+    const defeated = progress && Array.isArray(progress.defeated) ? progress.defeated : [];
+    if (!storageReadable) {
+        host.textContent = '无法读取雾村通关进度，请检查浏览器存储权限后重试。';
+    } else if (!['c1', 'c2', 'c3'].every(function (id) { return defeated.includes(id); })) {
+        host.textContent = '综合练习尚未开启。请先返回雾村，分别击败三位知识之主。';
+    } else {
+        const quiz = Quiz.create(
+            host,
+            { type: 'all', rounds: 10, timeLimit: 60 }
+        );
+
+        quiz.start().then(function (r) {
+            console.log('答对', r.correct, '/', r.total);
+        });
+    }
 </script>
 
 </body>
